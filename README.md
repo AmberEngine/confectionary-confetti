@@ -7,7 +7,7 @@ Confetti
 $ pip install -e git+git@github.com:AmberEngine/confetti.git#egg=confetti
 ```
 
-## Choose a key. Your key will be your application's namespace
+## Choose a key to be your application's namespace and encryption key name
 ```bash
 $ export CONFETTI_KEY=YourKey
 ```
