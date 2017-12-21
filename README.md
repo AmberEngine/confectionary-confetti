@@ -56,15 +56,15 @@ config = YourApp()
 see: http://boto3.readthedocs.io/en/latest/reference/services/ssm.html#SSM.Client.put_parameter
 ```json
 [{
-    'Name': 'APP_URL',
-    'Description': 'The URL',
-    'Value': 'http://www.mrcoolice.com/app',
-    'Type': 'String'
+    "Name": "APP_URL",
+    "Description": "The URL",
+    "Value": "http://www.mrcoolice.com/app",
+    "Type": "String"
 }, {
-    'Name': 'APP_KEY',
-    'Description': 'All my passwords and PINs in one parameter',
-    'Value': 'abcde12345',
-    'Type': 'SecureString'
+    "Name": "APP_KEY",
+    "Description": "All my passwords and PINs in one parameter",
+    "Value": "abcde12345",
+    "Type": "SecureString"
 }]
 ```
 
