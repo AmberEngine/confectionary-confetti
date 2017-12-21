@@ -1,5 +1,7 @@
 Confetti
 =========
+Confectionary confetti to confine those confounded configurations confidently
+---------
 
 ### Install in your application
 

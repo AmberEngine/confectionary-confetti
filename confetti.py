@@ -1,4 +1,7 @@
-"""Confetti."""
+"""Confetti.
+
+Confectionary confetti to confine those confounded configurations confidently.
+"""
 
 import json
 import logging
