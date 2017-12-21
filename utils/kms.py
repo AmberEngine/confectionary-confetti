@@ -4,11 +4,10 @@ import botocore
 
 
 def key_exists(kms, key_id):
-    """
-    Check that the encryption key exists and it's enabled.
+    """Check that the encryption key exists.
 
-    If the key exists, but isn't enabled, the caller needs to figure out why.
-    :param
+    :param key_id: the encryption key id, alias or arn
+    :type key_id: str
     """
     try:
         kms.describe_key(KeyId=key_id)
@@ -23,15 +22,22 @@ def key_exists(kms, key_id):
     return False
 
 
-def ensure_key(kms, key_id, description):
-    """
-    Create the encryption key.
+def ensure_key(kms, alias_name, description):
+    """Create the encryption key if it doesn't exist.
 
-    If it doesn't exist and create an alias.
+    New keys will be aliased and have key rotation enabled.
+
+    :param alias_name: the encryption key alias
+    :param description: a description of the key
+    :type alias_name: str
+    :type description: str
     """
-    if not key_exists(kms, key_id):
+    if not key_exists(kms, alias_name):
         response = kms.create_key(Description=description)
         key_metadata = response['KeyMetadata']
 
-        kms.create_alias(AliasName=key_id, TargetKeyId=key_metadata['KeyId'])
         kms.enable_key_rotation(KeyId=key_metadata['KeyId'])
+        kms.create_alias(
+            AliasName=alias_name,
+            TargetKeyId=key_metadata['KeyId']
+        )
