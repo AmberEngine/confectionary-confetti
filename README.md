@@ -1,7 +1,7 @@
 Confetti
 =========
 
-## Install in your application
+### Install in your application
 
 ```bash
 $ pip install -e git+git@github.com:AmberEngine/confetti.git#egg=confetti
@@ -74,14 +74,14 @@ see: http://boto3.readthedocs.io/en/latest/reference/services/ssm.html#SSM.Clien
     config.import_parameters('example.json')
 ```
 
-## Use your parameters in your application
+### Use your parameters in your application
 ```python
     config = YourApp()
 
     print(config.APP_URL)
 ```
 
-## Your Friendly Neighborhood Repository Owner
+### Your Friendly Neighborhood Repository Owner
 
 [![Jim Garner](https://avatars2.githubusercontent.com/u/9437566?v=3&s=100)](https://github.com/jg75)
 
