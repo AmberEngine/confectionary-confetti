@@ -1,18 +1,18 @@
 Confetti
 =========
 
-## Install in your application
+### Install in your application
 
 ```bash
 $ pip install -e git+git@github.com:AmberEngine/confetti.git#egg=confetti
 ```
 
-## Choose a key to be your application's namespace and encryption key name
+### Choose a key to be your application's namespace and encryption key name
 ```bash
 $ export CONFETTI_KEY=YourKey
 ```
 
-## Extend in your application
+### Extend in your application
 ```python
 """Example application."""
 
@@ -29,7 +29,7 @@ class MrCoolIceApp(Confetti):
     pass
 ```
 
-## Store some parameters (this will probably become a cli of some sort)
+### Store some parameters (this will probably become a cli of some sort)
 ```python
     config = MrCoolIceApp()
     parameters = [{
@@ -47,14 +47,14 @@ class MrCoolIceApp(Confetti):
     config.put_parameters(parameters)
 ```
 
-## Use your parameters in your application
+### Use your parameters in your application
 ```python
     config = MrCoolIceApp()
 
     print(config.APP_URL)
 ```
 
-## Your Friendly Neighborhood Repository Owner
+### Your Friendly Neighborhood Repository Owner
 
 [![Jim Garner](https://avatars2.githubusercontent.com/u/9437566?v=3&s=100)](https://github.com/jg75)
 
