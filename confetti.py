@@ -66,7 +66,7 @@ class Confetti(object):
         :param key: the config attribute name
         :type key: str
         """
-        return self.parameters[key]
+        return self.parameters[key].value
 
     def __iter__(self):
         """Override iter.
@@ -82,6 +82,7 @@ class Confetti(object):
         eval(repr(Confetti(**parameters))) == Confetti(**parameters)
         """
         return "{}(confetti_key='{}', confetti_app='{}', session={})".format(
+            self.__class__.__name__,
             self.confetti_key,
             self.confetti_app,
             self.session
@@ -101,12 +102,24 @@ class Confetti(object):
         ssm = self.session.client('ssm')
 
         for parameter in ssm.get_parameters_by_path(
-            Path=self.confetti_path,
-            WithDecryption=True
+            Path=self.confetti_path
         ).get('Parameters'):
             name = parameter['Name'].replace(self.confetti_path + '/', '')
+            attributes = {
+                'value': parameter['Value'],
+                'encrypted': None,
+                'decrypted': parameter['Value']
+            }
 
-            self.parameters[name] = parameter["Value"]
+            if parameter['Type'] == 'SecureString':
+                attributes['encrypted'] = parameter['Value']
+                attributes['decrypted'] = ssm.get_parameter(
+                    Name=parameter['Name'],
+                    WithDecryption=True
+                ).get('Parameter').get('Value')
+                attributes['value'] = attributes['decrypted']
+
+            self.parameters[name] = self.Parameter(**attributes)
 
     def put_parameters(self, parameters):
         """Put parameters to AWS Systems Manager parameter store.
@@ -181,3 +194,16 @@ class Confetti(object):
 
         if parameters:
             self.put_parameters(parameters)
+
+    class Parameter(object):
+        """The object used by confetti to hold config attribute values."""
+
+        def __init__(self, **attributes):
+            """Initialize a new Parameter."""
+            self.value = attributes.get('value')
+            self.decrypted = attributes.get('decrypted')
+            self.encrypted = attributes.get('encrypted')
+
+        def __str__(self):
+            """Str."""
+            return self.value
