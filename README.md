@@ -71,9 +71,14 @@ see: http://boto3.readthedocs.io/en/latest/reference/services/ssm.html#SSM.Clien
 ```
 
 ```python
+    # Create YourApp's config
     config = YourApp()
 
+    # Import from JSON
     config.import_parameters('example.json')
+
+    # Reload from AWS SSM
+    config.get_parameters()
 ```
 
 ### Use your parameters in your application

@@ -28,7 +28,7 @@ class Confetti(object):
         :param confetti_app: the application name
                              overrides CONFETTI_APP environment variable
                              defaults to the class name
-        :param session: the boto3 session
+        :param session: a boto3 session
                         defaults to the default session
         """
         self.confetti_key = confetti_key \
@@ -37,14 +37,13 @@ class Confetti(object):
         self.confetti_app = confetti_app \
             if confetti_app \
             else os.getenv('CONFETTI_APP', self.__class__.__name__)
-        self.session = session if session else boto3.session.Session()
-
-        # Protect these with a leading "_" so they don't interfere with
-        # potential parameter names.
-        # Also you probably don't want people interacting with these.
-        self._path = '/{}/{}'.format(self.confetti_key, self.confetti_app)
-        self._kms = self.session.client('kms')
-        self._ssm = self.session.client('ssm')
+        self.confetti_path = '/{}/{}'.format(
+            self.confetti_key,
+            self.confetti_app
+        )
+        self.session = session \
+            if session \
+            else boto3.session.Session()
 
         self.get_parameters()
 
@@ -53,6 +52,9 @@ class Confetti(object):
 
         When we attempt to get an attribute that doesn't exist on the object,
         instead we're actually trying to get it from self.parameters
+
+        :param attribute: the config atribute
+        :type attribute: str
         """
         return self.parameters.get(attribute, None)
 
@@ -60,6 +62,9 @@ class Confetti(object):
         """Override getitem.
 
         Parameters are retrieved from the dictionary.
+
+        :param key: the config attribute name
+        :type key: str
         """
         return self.parameters[key]
 
@@ -93,12 +98,13 @@ class Confetti(object):
     def get_parameters(self):
         """Get parameters from AWS SSM parameter store by path."""
         self.parameters = dict()
+        ssm = self.session.client('ssm')
 
-        for parameter in self._ssm.get_parameters_by_path(
-            Path=self._path,
+        for parameter in ssm.get_parameters_by_path(
+            Path=self.confetti_path,
             WithDecryption=True
         ).get('Parameters'):
-            name = parameter['Name'].replace(self._path + '/', '')
+            name = parameter['Name'].replace(self.confetti_path + '/', '')
 
             self.parameters[name] = parameter["Value"]
 
@@ -117,18 +123,22 @@ class Confetti(object):
         description = self.confetti_key
         message = '{}: {}: {}'
         logger = self.get_logger()
+        kms = self.session.client('kms')
+        ssm = self.session.client('ssm')
 
-        utils.kms.ensure_key(self._kms, key_id, description)
+        utils.kms.ensure_key(kms, key_id, description)
 
         for parameter in parameters:
-            if not parameter['Name'].startswith(self._path):
-                parameter['Name'] = '/'.join([self._path, parameter['Name']])
+            if not parameter['Name'].startswith(self.confetti_path):
+                parameter['Name'] = '/'.join([
+                    self.confetti_path, parameter['Name']
+                ])
 
             if parameter['Type'] == 'SecureString':
                 parameter['KeyId'] = key_id
 
             try:
-                self._ssm.put_parameter(**parameter)
+                ssm.put_parameter(**parameter)
             except botocore.exceptions.ClientError as e:
                 if e.response['Error']['Code'] == 'ParameterAlreadyExists':
                     logger.warning(
