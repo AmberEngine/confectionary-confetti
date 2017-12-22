@@ -202,9 +202,9 @@ class Confetti(object):
             self.encrypted = attributes.get('encrypted')
 
         def __repr__(self):
-            """Repr."""
+            """Override repr."""
             return "\'{}\'".format(self.value)
 
         def __str__(self):
-            """Str."""
+            """Override str."""
             return self.value
