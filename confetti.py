@@ -105,21 +105,18 @@ class Confetti(object):
             Path=self.confetti_path
         ).get('Parameters'):
             name = parameter['Name'].replace(self.confetti_path + '/', '')
-            attributes = {
-                'value': parameter['Value'],
-                'encrypted': None,
-                'decrypted': parameter['Value']
-            }
+            value = parameter['Value']
+            attributes = dict()
 
             if parameter['Type'] == 'SecureString':
-                attributes['encrypted'] = parameter['Value']
+                attributes['encrypted'] = value
                 attributes['decrypted'] = ssm.get_parameter(
                     Name=parameter['Name'],
                     WithDecryption=True
                 ).get('Parameter').get('Value')
-                attributes['value'] = attributes['decrypted']
+                value = attributes['decrypted']
 
-            self.parameters[name] = self.Parameter(**attributes)
+            self.parameters[name] = self.Parameter(value, **attributes)
 
     def put_parameters(self, parameters):
         """Put parameters to AWS Systems Manager parameter store.
@@ -198,11 +195,15 @@ class Confetti(object):
     class Parameter(object):
         """The object used by confetti to hold config attribute values."""
 
-        def __init__(self, **attributes):
+        def __init__(self, value, **attributes):
             """Initialize a new Parameter."""
-            self.value = attributes.get('value')
+            self.value = value
             self.decrypted = attributes.get('decrypted')
             self.encrypted = attributes.get('encrypted')
+
+        def __repr__(self):
+            """Repr."""
+            return "\'{}\'".format(self.value)
 
         def __str__(self):
             """Str."""
