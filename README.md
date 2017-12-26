@@ -67,6 +67,11 @@ see: http://boto3.readthedocs.io/en/latest/reference/services/ssm.html#SSM.Clien
     "Description": "All my passwords and PINs in one parameter",
     "Value": "abcde12345",
     "Type": "SecureString"
+}, {
+    "Name": "THINGS",
+    "Description": "All the things",
+    "Value": "thing1, thing2",
+    "Type": "StringList"
 }]
 ```
 
@@ -92,4 +97,4 @@ see: http://boto3.readthedocs.io/en/latest/reference/services/ssm.html#SSM.Clien
 
 [![Jim Garner](https://avatars2.githubusercontent.com/u/9437566?v=3&s=100)](https://github.com/jg75)
 
-[Jim Garner](https://github.com/jg75)
+[Jim Garner](https:/github.com/jg75)
