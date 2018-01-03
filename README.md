@@ -6,7 +6,7 @@ Confectionary confetti to confine those confounded configurations confidently
 ### Install in your application
 
 ```bash
-$ pip install -e git+git@github.com:AmberEngine/confetti.git#egg=confetti
+$ pip install -e git+git@github.com:AmberEngine/confectionary-confetti.git#egg=confectionary-confetti
 ```
 
 ## Choose a key. Your key will be part of the namespacing of your application's parameters.
