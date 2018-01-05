@@ -1,8 +1,8 @@
 """Confetti."""
 from setuptools import setup, find_packages
 
-install_requires = []
-tests_require = install_requires +['boto3==1.5', 'pytest==3.2.3']
+install_requires = ['boto3>=1.5']
+tests_require = install_requires + ['pytest==3.2.3']
 
 setup(
     name='confectionary-confetti',
