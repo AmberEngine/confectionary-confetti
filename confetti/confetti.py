@@ -10,7 +10,7 @@ import os
 import boto3
 import botocore
 
-import utils.kms
+import confetti.utils.kms as kms_utils
 
 
 class Confetti(object):
@@ -136,7 +136,7 @@ class Confetti(object):
         kms = self.session.client('kms')
         ssm = self.session.client('ssm')
 
-        utils.kms.ensure_key(kms, key_id, description)
+        kms_utils.ensure_key(kms, key_id, description)
 
         for parameter in parameters:
             if not parameter['Name'].startswith(self.confetti_path):
