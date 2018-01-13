@@ -54,20 +54,20 @@ def get_description(file_name='README.md'):
     """Get contents of a file as a string or empty string if none exists."""
 
     path = os.path.join(get_app_directory(), file_name)
-    description = ""
 
     if os.path.exists(path):
         with open(path) as in_file:
-            description = in_file.read()
+            return in_file.read()
 
-    return description
+    return None
+
 
 arguments = {
     'name': 'confectionary-confetti',
     'version': '0.1',
-    'license': 'Other/Proprietary License',
-    'long_description': get_description(),
     'description': __doc__,
+    'long_description': get_description(),
+    'license': 'Other/Proprietary License',
     'install_requires': get_requirements(),
     'dependency_links': get_dependency_links(),
     'packages': find_packages(),
