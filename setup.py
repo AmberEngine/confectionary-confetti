@@ -3,7 +3,7 @@ import os
 import sys
 
 from pip import req
-from setuptools import setup
+from setuptools import setup, find_packages
 
 
 def get_app_directory():
@@ -58,7 +58,7 @@ def get_description(file_name='README.md'):
 
     if os.path.exists(path):
         with open(path) as in_file:
-            long_description = in_file.read()
+            description = in_file.read()
 
     return description
 
@@ -67,9 +67,10 @@ arguments = {
     'version': '0.1',
     'license': 'Other/Proprietary License',
     'long_description': get_description(),
+    'description': __doc__,
     'install_requires': get_requirements(),
     'dependency_links': get_dependency_links(),
-    'py_modules': ['confetti'],
+    'packages': find_packages(),
 }
 
 setup(**arguments)
