@@ -4,9 +4,8 @@ Confectionary confetti to confine those confounded configurations confidently
 ---------
 
 ### Install in your application
-
 ```bash
-$ pip install -e git+git@github.com:AmberEngine/confectionary-confetti.git#egg=confectionary-confetti
+$ pip install git+ssh://git@github.com/AmberEngine/confectionary-confetti.git#egg=confectionary-confetti
 ```
 
 ## Choose a key. Your key will be part of the namespacing of your application's parameters.
@@ -35,7 +34,7 @@ The default value will be the class name in either case.
     config = Confetti(session=session)
 ```
 
-## Or you could just extend Confetti in your application
+## Example: extend Confetti in your application
 ```python
 """Example application."""
 
@@ -54,8 +53,7 @@ class YourApp(Confetti):
 config = YourApp()
 ```
 
-## Store some parameters by importing from a JSON file.
-see: http://boto3.readthedocs.io/en/latest/reference/services/ssm.html#SSM.Client.put_parameter
+## Store parameters by importing from a JSON file.
 ```json
 [{
     "Name": "APP_URL",
@@ -81,16 +79,26 @@ see: http://boto3.readthedocs.io/en/latest/reference/services/ssm.html#SSM.Clien
 
     # Import from JSON
     config.import_parameters('example.json')
+```
 
-    # Reload from AWS SSM
-    config.get_parameters()
+## Or export parameters to a JSON file so you can modify in bulk.
+```python
+    # Create YourApp's config
+    config = YourApp()
+
+    # Export to JSON
+    config.export_parameters('example.json')
 ```
 
 ### Use your parameters in your application
 ```python
     config = YourApp()
 
+    # Print a specific parameter
     print(config.APP_URL)
+
+    # Print a dictionary of your parameters
+    print(config.parameters)
 ```
 
 ### Your Friendly Neighborhood Repository Owner
