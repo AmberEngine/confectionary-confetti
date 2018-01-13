@@ -11,6 +11,7 @@ import boto3
 import botocore
 
 import confetti.utils.kms as kms_utils
+import confetti.utils.ssm as ssm_utils
 
 
 class Confetti(object):
@@ -100,18 +101,10 @@ class Confetti(object):
         """Get parameters from AWS SSM parameter store by path."""
         self.parameters = dict()
         ssm = self.session.client('ssm')
-
-        response = ssm.get_parameters_by_path(Path=self.confetti_path)
-        parameters = response.get('Parameters')
-        next_token = response.get('NextToken')
-
-        while next_token:
-            response = ssm.get_parameters_by_path(
-                Path=self.confetti_path,
-                NextToken=next_token
-            )
-            parameters += response.get('Parameters')
-            next_token = response.get('NextToken')
+        parameters = ssm_utils.get_parameters_by_path(
+            ssm,
+            **{'Path': self.confetti_path}
+        )
 
         for parameter in parameters:
             name = parameter['Name'].replace(self.confetti_path + '/', '')
@@ -201,6 +194,26 @@ class Confetti(object):
 
         if parameters:
             self.put_parameters(parameters)
+
+    def export_parameters(self, file_name):
+        """Import parameters to a JSON file.
+
+        The parameters are a list of parameters to the
+        boto3 SSM client method put_parameter.
+
+        :param file_name: the file name containing the JSON parameters
+        :type file_name: str
+        """
+
+        ssm = self.session.client('ssm')
+        parameters = ssm_utils.get_parameters_by_path(
+            ssm,
+            **{'Path': self.confetti_path}
+        )
+
+        if parameters:
+            with open(file_name, 'w') as out_file:
+                out_file.write(json.dumps(parameters))
 
     class Parameter(object):
         """The object used by confetti to hold config attribute values."""
