@@ -110,7 +110,7 @@ class Confetti(object):
                 Path=self.confetti_path,
                 NextToken=next_token
             )
-            parameters = response.get('Parameters')
+            parameters += response.get('Parameters')
             next_token = response.get('NextToken')
 
         for parameter in parameters:
