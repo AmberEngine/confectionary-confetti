@@ -101,9 +101,19 @@ class Confetti(object):
         self.parameters = dict()
         ssm = self.session.client('ssm')
 
-        for parameter in ssm.get_parameters_by_path(
-            Path=self.confetti_path
-        ).get('Parameters'):
+        response = ssm.get_parameters_by_path(Path=self.confetti_path)
+        parameters = response.get('Parameters')
+        next_token = response.get('NextToken')
+
+        while next_token:
+            response = ssm.get_parameters_by_path(
+                Path=self.confetti_path,
+                NextToken=next_token
+            )
+            parameters = response.get('Parameters')
+            next_token = response.get('NextToken')
+
+        for parameter in parameters:
             name = parameter['Name'].replace(self.confetti_path + '/', '')
             value = parameter['Value']
             attributes = dict()
