@@ -103,7 +103,7 @@ class Confetti(object):
         ssm = self.session.client('ssm')
         parameters = ssm_utils.get_parameters_by_path(
             ssm,
-            **{'Path': self.confetti_path}
+            Path=self.confetti_path
         )
 
         for parameter in parameters:
@@ -196,7 +196,7 @@ class Confetti(object):
             self.put_parameters(parameters)
 
     def export_parameters(self, file_name):
-        """Import parameters to a JSON file.
+        """Write parameters to a JSON file.
 
         The parameters are a list of parameters to the
         boto3 SSM client method put_parameter.
@@ -208,7 +208,7 @@ class Confetti(object):
         ssm = self.session.client('ssm')
         parameters = ssm_utils.get_parameters_by_path(
             ssm,
-            **{'Path': self.confetti_path}
+            Path=self.confetti_path
         )
 
         if parameters:
