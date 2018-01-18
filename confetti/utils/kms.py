@@ -9,6 +9,7 @@ def key_exists(kms, key_id):
     :param key_id: the encryption key id, alias or arn
     :type key_id: str
     """
+
     try:
         kms.describe_key(KeyId=key_id)
 
@@ -32,6 +33,7 @@ def ensure_key(kms, alias_name, description):
     :type alias_name: str
     :type description: str
     """
+
     if not key_exists(kms, alias_name):
         response = kms.create_key(Description=description)
         key_metadata = response['KeyMetadata']

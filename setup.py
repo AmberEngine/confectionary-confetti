@@ -1,15 +1,76 @@
 """Confetti."""
+import os
+import sys
+
+from pip import req
 from setuptools import setup, find_packages
 
-install_requires = ['boto3>=1.5']
-tests_require = install_requires + ['pytest==3.2.3']
 
-setup(
-    name='confectionary-confetti',
-    version='0.1',
-    description=__doc__,
-    packages=find_packages(),
-    py_modules=['confetti'],
-    install_requires=install_requires,
-    tests_require=tests_require
-)
+def get_app_directory():
+    """Get the location of this application."""
+
+    directory = os.path.dirname(__file__) 
+
+    if not directory:
+        directory = os.getcwd()
+
+    return directory
+
+
+def get_requirements(file_name='requirements.txt'):
+    """Get requirements as a list."""
+
+    path = os.path.join(get_app_directory(), file_name)
+    requirements_list = []
+
+    if os.path.exists(path):
+        requirements_list = [str(r.req) for r in req.parse_requirements(
+            path,
+            session=False
+        )]
+
+    if 'develop' in sys.argv and file_name == 'requirements.txt':
+        requirements_list += get_requirements(
+            file_name='requirements.develop.txt'
+        )
+
+    return requirements_list
+
+
+def get_dependency_links(file_name='dependency_links.txt'):
+    """Get the dependency links as a list."""
+
+    path = os.path.join(get_app_directory(), file_name)
+    dependency_links = []
+
+    if os.path.exists(path):
+        with open(os.path.join(path)) as in_file:
+            dependency_links = [line.strip() for line in in_file]
+
+    return dependency_links
+
+
+def get_description(file_name='README.md'):
+    """Get contents of a file as a string or empty string if none exists."""
+
+    path = os.path.join(get_app_directory(), file_name)
+
+    if os.path.exists(path):
+        with open(path) as in_file:
+            return in_file.read()
+
+    return None
+
+
+arguments = {
+    'name': 'confectionary-confetti',
+    'version': '0.1',
+    'description': __doc__,
+    'long_description': get_description(),
+    'license': 'Other/Proprietary License',
+    'install_requires': get_requirements(),
+    'dependency_links': get_dependency_links(),
+    'packages': find_packages(),
+}
+
+setup(**arguments)
