@@ -5,8 +5,17 @@ Confectionary confetti to confine those confounded configurations confidently
 
 ### Install in your application
 ```bash
+$ pip install boto3
 $ pip install git+ssh://git@github.com/AmberEngine/confectionary-confetti.git#egg=confectionary-confetti
 ```
+
+**You need to install `boto3` if it is not already installed.**
+`boto3` is **not** a listed package dependency of `confetti`.
+
+On AWS Lambda functions `boto3` is already present. To include it would result
+in exceeding the allowed size for lambda code.
+
+It is easier to instead have projects install _both_ `confetti` and `boto3` manually.
 
 ## Choose a key. Your key will be part of the namespacing of your application's parameters.
 ```bash
