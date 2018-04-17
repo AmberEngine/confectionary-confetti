@@ -1,40 +1,17 @@
 """Confetti."""
 import os
-import sys
-
-from pip import req
 from setuptools import setup, find_packages
 
 
 def get_app_directory():
     """Get the location of this application."""
 
-    directory = os.path.dirname(__file__) 
+    directory = os.path.dirname(__file__)
 
     if not directory:
         directory = os.getcwd()
 
     return directory
-
-
-def get_requirements(file_name='requirements.txt'):
-    """Get requirements as a list."""
-
-    path = os.path.join(get_app_directory(), file_name)
-    requirements_list = []
-
-    if os.path.exists(path):
-        requirements_list = [str(r.req) for r in req.parse_requirements(
-            path,
-            session=False
-        )]
-
-    if 'develop' in sys.argv and file_name == 'requirements.txt':
-        requirements_list += get_requirements(
-            file_name='requirements.develop.txt'
-        )
-
-    return requirements_list
 
 
 def get_dependency_links(file_name='dependency_links.txt'):
@@ -68,7 +45,9 @@ arguments = {
     'description': __doc__,
     'long_description': get_description(),
     'license': 'Other/Proprietary License',
-    'install_requires': get_requirements(),
+    'install_requires': [
+        'boto3>=1.5',
+    ],
     'dependency_links': get_dependency_links(),
     'packages': find_packages(),
 }
