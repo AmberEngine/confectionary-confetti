@@ -17,12 +17,19 @@ import confetti.utils.ssm as ssm_utils
 class Confetti(object):
     """Base class Confetti can be extended by the application."""
 
-    def __init__(self, confetti_key=None, confetti_app=None, session=None):
+    def __init__(
+        self,
+        confetti_path=None,
+        confetti_key=None,
+        confetti_app=None,
+        session=None
+    ):
         """Initialize and get application parameters.
 
-        Set the AWS SSM parameter store path to /<confetti_key>/<confetti_app>
-        and get parameters by path.
+        If confetti_path is no provided, then set the AWS SSM parameter store
+        path to /<confetti_key>/<confetti_app> and get parameters by path.
 
+        :param confetti_path: the SSM parameter store path
         :param confetti_key: the encryption key name
                              overrides CONFETTI_KEY environment variable
                              defaults to Development
@@ -38,10 +45,9 @@ class Confetti(object):
         self.confetti_app = confetti_app \
             if confetti_app \
             else os.getenv('CONFETTI_APP', self.__class__.__name__)
-        self.confetti_path = '/{}/{}'.format(
-            self.confetti_key,
-            self.confetti_app
-        )
+        self.confetti_path = confetti_path \
+            if confetti_path \
+            else f'/{confetti_key}/{confetti_app}'
         self.session = session \
             if session \
             else boto3.session.Session()
@@ -204,7 +210,6 @@ class Confetti(object):
         :param file_name: the file name containing the JSON parameters
         :type file_name: str
         """
-
         ssm = self.session.client('ssm')
         parameters = ssm_utils.get_parameters_by_path(
             ssm,
