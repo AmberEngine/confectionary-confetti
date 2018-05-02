@@ -17,6 +17,16 @@ in exceeding the allowed size for lambda code.
 
 It is easier to instead have projects install _both_ `confetti` and `boto3` manually.
 
+## Choose a path for the namespacing of your application's parameters.
+```bash
+$ export CONFETTI_PATH=/Your/Path
+```
+Optionally you can override this in the constructor's keyword arguments.
+```python
+    config = Confetti(confetti_path='/Your/Path')
+```
+The default path will be constructed as ```/<confetti_key>/<confetti_app>```
+
 ## Choose a key. Your key will be part of the namespacing of your application's parameters.
 ```bash
 $ export CONFETTI_KEY=YourKey
@@ -27,7 +37,7 @@ Optionally you can override this in the constructor's keyword arguments.
 ```
 The default value will be 'Development' in either case.
 
-## Choose an app name. Your app name will be part of the namespacing of your application's parameters.
+## Choose an app name. Your app name will be part of the default namespacing of your application's parameters.
 ```bash
 $ export CONFETTI_APP=YourApp
 ```
