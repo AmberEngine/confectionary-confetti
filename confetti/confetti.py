@@ -98,11 +98,15 @@ class Confetti(object):
         Create a string representation that is unambiguous so that
         eval(repr(Confetti(**parameters))) == Confetti(**parameters)
         """
-        return "{}(confetti_key='{}', confetti_app='{}', session={})".format(
+        template = "{}(confetti_key='{}', confetti_app='{}', " \
+                   "confetti_path='{}', session={}, recursive={})"
+        return template.format(
             self.__class__.__name__,
             self.confetti_key,
             self.confetti_app,
-            self.session
+            self.confetti_path,
+            self.session,
+            self.recursive,
         )
 
     def __str__(self):
