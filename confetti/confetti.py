@@ -49,7 +49,7 @@ class Confetti(object):
             confetti_app = os.getenv('CONFETTI_APP', self.__class__.__name__)
 
         if not confetti_path:
-            if not confetti_key or confetti_app:
+            if not confetti_key or not confetti_app:
                 raise ValueError("must specify confetti path, or key and app.")
             confetti_path = f'/{confetti_key}/{confetti_app}'
 
