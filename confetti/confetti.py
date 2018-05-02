@@ -42,19 +42,24 @@ class Confetti(object):
         :param recursive: whether to recursively read parameters under the
                           confetti_path. Defaults to False.
         """
-        self.confetti_key = confetti_key \
-            if confetti_key \
-            else os.getenv('CONFETTI_KEY', 'Development')
-        self.confetti_app = confetti_app \
-            if confetti_app \
-            else os.getenv('CONFETTI_APP', self.__class__.__name__)
-        self.confetti_path = confetti_path \
-            if confetti_path \
-            else f'/{confetti_key}/{confetti_app}'
-        self.session = session \
-            if session \
-            else boto3.session.Session()
+        if not confetti_key:
+            confetti_key = os.getenv('CONFETTI_KEY', 'Development')
 
+        if not confetti_app:
+            confetti_app = os.getenv('CONFETTI_APP', self.__class__.__name__)
+
+        if not confetti_path:
+            if not confetti_key or not confetti_app:
+                raise ValueError("must specify confetti path, or key and app.")
+            confetti_path = f'/{confetti_key}/{confetti_app}'
+
+        if not session:
+            session = boto3.session.Session()
+
+        self.confetti_key = confetti_key
+        self.confetti_app = confetti_app
+        self.confetti_path = confetti_path
+        self.session = session
         self.recursive = recursive
 
         self.get_parameters()
@@ -93,11 +98,15 @@ class Confetti(object):
         Create a string representation that is unambiguous so that
         eval(repr(Confetti(**parameters))) == Confetti(**parameters)
         """
-        return "{}(confetti_key='{}', confetti_app='{}', session={})".format(
+        template = "{}(confetti_key='{}', confetti_app='{}', " \
+                   "confetti_path='{}', session={}, recursive={})"
+        return template.format(
             self.__class__.__name__,
             self.confetti_key,
             self.confetti_app,
-            self.session
+            self.confetti_path,
+            self.session,
+            self.recursive,
         )
 
     def __str__(self):
