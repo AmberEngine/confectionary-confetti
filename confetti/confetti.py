@@ -22,7 +22,8 @@ class Confetti(object):
         confetti_path=None,
         confetti_key=None,
         confetti_app=None,
-        session=None
+        session=None,
+        recursive=False,
     ):
         """Initialize and get application parameters.
 
@@ -38,6 +39,8 @@ class Confetti(object):
                              defaults to the class name
         :param session: a boto3 session
                         defaults to the default session
+        :param recursive: whether to recursively read parameters under the
+                          confetti_path. Defaults to False.
         """
         self.confetti_key = confetti_key \
             if confetti_key \
@@ -51,6 +54,8 @@ class Confetti(object):
         self.session = session \
             if session \
             else boto3.session.Session()
+
+        self.recursive = recursive
 
         self.get_parameters()
 
@@ -109,7 +114,8 @@ class Confetti(object):
         ssm = self.session.client('ssm')
         parameters = ssm_utils.get_parameters_by_path(
             ssm,
-            Path=self.confetti_path
+            Path=self.confetti_path,
+            Recurisve=self.recursive,
         )
 
         for parameter in parameters:
