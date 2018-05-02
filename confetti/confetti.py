@@ -115,7 +115,7 @@ class Confetti(object):
         parameters = ssm_utils.get_parameters_by_path(
             ssm,
             Path=self.confetti_path,
-            Recurisve=self.recursive,
+            Recursive=self.recursive,
         )
 
         for parameter in parameters:
