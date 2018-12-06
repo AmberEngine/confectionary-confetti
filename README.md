@@ -17,17 +17,7 @@ in exceeding the allowed size for lambda code.
 
 It is easier to instead have projects install _both_ `confetti` and `boto3` manually.
 
-## Choose a path for the namespacing of your application's parameters.
-```bash
-$ export CONFETTI_PATH=/Your/Path
-```
-Optionally you can override this in the constructor's keyword arguments.
-```python
-    config = Confetti(confetti_path='/Your/Path')
-```
-The default path will be constructed as ```/<confetti_key>/<confetti_app>```
-
-## Choose a key. Your key will be part of the namespacing of your application's parameters.
+## Choose a key. Your key will be part of the namespacing of your application's parameters and will be used as an alias for a KMS key to encrypt and decrypt your parameters.
 ```bash
 $ export CONFETTI_KEY=YourKey
 ```
@@ -35,17 +25,19 @@ Optionally you can override this in the constructor's keyword arguments.
 ```python
     config = Confetti(confetti_key='YourKey')
 ```
-The default value will be 'Development' in either case.
+The default value is 'Development' if neither is specified.
 
-## Choose an app name. Your app name will be part of the default namespacing of your application's parameters.
+## Choose a path for the namespacing of your application's parameters.
 ```bash
-$ export CONFETTI_APP=YourApp
+$ export CONFETTI_PATH=Your/Path
 ```
 Optionally you can override this in the constructor's keyword arguments.
 ```python
-    config = Confetti(confetti_app='YourApp')
+    config = Confetti(confetti_path='Your/Path')
 ```
-The default value will be the class name in either case.
+The path will be constructed as ```/<confetti_key>/<confetti_path>```
+
+The default value will be the class name if neither is specified.
 
 ## A boto3 session will be created from your AWS config and credentials or role or you can override the session.
 ```python
@@ -73,33 +65,41 @@ see also: [AWS Systems Manager Parameter Store](https://console.aws.amazon.com/s
     "Type": "StringList"
 }]
 ```
-
+### Set your parameters for your application.  Do this only once and your parameters will be stored in your AWS SSM Parameter Store.
 ```python
-    # Create YourApp's config
-    config = YourApp()
+    from confetti import Confetti
 
-    # Import from JSON
-    config.import_parameters('example.json')
+    # Create your app's config
+    confetti = Confetti(confetti_key="Production", confetti_path="MyApp")
+
+    # Set parameters in the parameter store
+    config.set("example.json")
 ```
 
-## Or export parameters to a JSON file so you can modify in bulk.
+### Use your parameters in your application.  Do this to retrieve your parameters from your AWS SSM Parameter Store.
 ```python
-    # Create YourApp's config
-    config = YourApp()
+    from confetti import Confetti
 
-    # Export to JSON
-    config.export_parameters('example.json')
-```
-
-### Use your parameters in your application
-```python
-    config = YourApp()
+    confetti = Confetti(confetti_key="Production", confetti_path="MyApp")
+    config = confetti.get()
 
     # Print a specific parameter
     print(config.APP_URL)
 
-    # Print a dictionary of your parameters
-    print(config.parameters)
+    # Print your parameters
+    print(config)
+```
+
+### Export parameters to a JSON file so you can modify your parameters. Use the Confetti.set(json) function as above when you're done.
+```python
+    from confetti import Confetti
+
+    # Create your app's config
+    confetti = Confetti(confetti_key="Production", confetti_path="MyApp")
+    config = confetti.get()
+
+    # Export to JSON
+    config.export_parameters("example.json")
 ```
 
 ### Your Friendly Neighborhood Repository Owner

@@ -1,1 +1,4 @@
-from confetti.confetti import *
+"""Confetti."""
+
+
+from confetti.parameters import Confetti
