@@ -14,6 +14,14 @@ from confetti.utils.client import ClientResponseGenerator
 class Confetti:
     """Base class for Confetti."""
 
+    @staticmethod
+    def get_parameters(client, **kwargs):
+        """Get a dictionary of parameters."""
+        generator = ClientResponseGenerator(client)
+        args = ["get_parameters_by_path", "Parameters"]
+
+        return generator.get(*args, **kwargs)
+
     def __init__(
         self,
         session=None,
@@ -55,11 +63,9 @@ class Confetti:
     def get(self):
         """Get namespaced parameters."""
         client = self.session.client("ssm")
-        generator = ClientResponseGenerator(client)
-        args = ["get_parameters_by_path", "Parameters"]
         parameters = dict()
 
-        for parameter in generator.get(*args, **self.kwargs):
+        for parameter in self.get_parameters(client, **self.kwargs):
             name = os.path.basename(parameter["Name"])
             value = parameter["Value"]
 
@@ -101,4 +107,16 @@ class Confetti:
 
     def export_parameters(self, file_name):
         """Export parameters."""
-        pass
+        client = self.session.client("ssm")
+        parameters = list()
+
+        for parameter in self.get_parameters(client, **self.kwargs):
+            parameters.append({
+                "Name": os.path.basename(parameter["Name"]),
+                "Value": parameter["Value"],
+                "Type": parameter["Type"],
+                "Overwrite": True
+            })
+
+        with open(file_name, "w") as out_file:
+            json.dump(parameters, out_file)
