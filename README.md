@@ -36,7 +36,7 @@ $ export CONFETTI_PATH=Your/Path
 ```
 The default value will be the class name if neither is specified.
 
-## The parameter store path will be constructed as ```/<confetti_key>/<confetti_path>```
+## The parameter store path will be constructed as `/<confetti_key>/<confetti_path>`
 
 ## Retrieve and use your parameters in your application.
 ```python
