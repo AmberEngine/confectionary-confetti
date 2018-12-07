@@ -1,21 +1,17 @@
-"""Confetti."""
+"""Confetti configuration utility."""
 import os
 from setuptools import setup, find_packages
 
 
 def get_description(file_name='README.md'):
-    """Get contents of a file as a string or empty string if none exists.
-
-    :param file_name: The name of the file containing the description
-    """
+    """Get contents of a file as a string or empty string if none exists."""
     path = os.path.join(os.path.dirname(__file__), file_name)
-    description = ""
 
     if os.path.exists(path):
         with open(path) as in_file:
-            long_description = in_file.read()
+            return in_file.read()
 
-    return description
+    return __doc__
 
 
 arguments = {
