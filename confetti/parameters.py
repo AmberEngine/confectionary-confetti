@@ -102,8 +102,6 @@ class Confetti:
                     print(f"{parameter_already_exists}: {parameter}")
                 else:
                     raise e
-            except Exception:
-                raise
 
     def export_parameters(self, file_name):
         """Export parameters."""
