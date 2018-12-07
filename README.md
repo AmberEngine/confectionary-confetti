@@ -18,7 +18,7 @@ $ pip install git+ssh://git@github.com/AmberEngine/confectionary-confetti.git#eg
 
 ## Choose a key. Your key will the root of the namespacing path of your application's parameters and will be used as an alias for a KMS key to encrypt and decrypt your parameters. If you don't choose a key, the default value is 'Development'.
 
-### Set CONFETTI_KEY environment variable.
+### Set CONFETTI_KEY environment variable. The CONFETTI_KEY environment overrides the default.
 ```bash
 $ export CONFETTI_KEY=YourKey
 ```
