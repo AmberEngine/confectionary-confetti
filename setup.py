@@ -1,9 +1,9 @@
-"""Confetti configuration utility."""
+"""AWS SSM parameter store utility."""
 import os
 from setuptools import setup, find_packages
 
 
-def get_description(file_name='README.md'):
+def get_description(file_name="README.md"):
     """Get contents of a file as a string or empty string if none exists."""
     path = os.path.join(os.path.dirname(__file__), file_name)
 
@@ -14,13 +14,21 @@ def get_description(file_name='README.md'):
     return __doc__
 
 
-arguments = {
-    'name': 'confectionary-confetti',
-    'version': '0.1',
-    'description': __doc__,
-    'long_description': get_description(),
-    'license': 'Other/Proprietary License',
-    'packages': find_packages(),
-}
+install_requires = ["boto3<2"]
+tests_require = install_requires + ["pytest==3.3.1"]
+setup_requires = ["pytest-runner>=2.0"]
 
-setup(**arguments)
+
+setup(
+    name="confectionary-confetti",
+    version="1",
+    liscense="MIT",
+    url="https://github.com/AmberEngine/confectionary-confetti",
+    description=__doc__,
+    long_description=get_description(),
+    long_description_content_type="text/markdown",
+    install_requires=install_requires,
+    tests_require=tests_require,
+    setup_requires=setup_requires,
+    packages=find_packages()
+)
