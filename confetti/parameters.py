@@ -1,4 +1,4 @@
-"""Parameters."""
+"""AWS SSM parameter store utility."""
 import json
 import os
 
@@ -51,8 +51,17 @@ class Confetti:
         self.confetti_path = self.get_confetti_path(confetti_path)
         self.path = self.get_path(self.confetti_key, self.confetti_path)
 
+    def __repr__(self):
+        """Override repr method."""
+        return(
+            f"{self.__class__.__name__}("
+            f"session={self.session}, "
+            f"confetti_key={'self.confetti_key'}, "
+            f"confetti_path={'self.confetti_path'})"
+        )
+
     def __str__(self):
-        """Override __str__ method."""
+        """Override str method."""
         return f"{self.path}"
 
     def get_parameters_by_path(self, **kwargs):
@@ -119,6 +128,6 @@ class Confetti:
                 parameter_already_exists = "ParameterAlreadyExists"
 
                 if e.response["Error"]["Code"] == parameter_already_exists:
-                    print(f"{parameter_already_exists}: {parameter}")
+                    pass
                 else:
                     raise e
