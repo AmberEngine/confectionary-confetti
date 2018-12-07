@@ -12,8 +12,16 @@ $ pip install git+ssh://git@github.com/AmberEngine/confectionary-confetti.git#eg
 
 ### The session keyword argument overrides the default session.
 ```python
+    from confetti import Confetti
+    
     session = boto3.session.Session()
     confetti = Confetti(session=session)
+    
+    print(confetti.path)
+```
+### Output
+```
+/Development/Confetti
 ```
 
 ## Choose a key. Your key will the root of the namespacing path of your application's parameters and will be used as an alias for a KMS key to encrypt and decrypt your parameters. If you don't choose a key, the default value is 'Development'.
@@ -22,28 +30,76 @@ $ pip install git+ssh://git@github.com/AmberEngine/confectionary-confetti.git#eg
 ```bash
 $ export CONFETTI_KEY=YourKey
 ```
+```python
+    from confetti import Confetti
+    
+    confetti = Confetti()
+    
+    print(confetti.path)
+```
+### Output
+```
+/YourKey/Confetti
+```
 
 ### The confetti_key keyword argument overrides the CONFETTI_KEY environment variable.
 ```python
+    from confetti import Confetti
+    
     confetti = Confetti(confetti_key='YourKey')
+    
+    print(confetti.path)
+```
+### Output
+```
+/YourKey/Confetti
 ```
 
 ## Choose a path.  Your path will be appended to the namespacing path of your application's parameters, i.e. /<confetti_key>/<confetti_path>. e.g. /YourKey/Your/Path. If you don't choose a path, the default value is the name of the Confetti class.
 
 ### Override the Confetti class and use MyApp as the default.
 ```python
+    from confetti import Confetti
+    
     class MyApp(Confetti):
         pass
+    
+    confetti = MyApp()
+    
+    print(confetti.path)
+```
+### Output
+```
+/Development/MyApp
 ```
 
 ### Set CONFETTI_PATH environment variable. The CONFETTI_PATH environment overrides the default.
 ```bash
 $ export CONFETTI_PATH=Your/Path
 ```
+```python
+    from confetti import Confetti
+    
+    confetti = Confetti()
+    
+    print(confetti.path)
+```
+### Output
+```
+/Development/Your/Path
+```
 
 ### The confetti_path keyword argument overrides the CONFETTI_PATH environment variable.
 ```python
+    from confetti import Confetti
+    
     confetti = Confetti(confetti_path='Your/Path')
+    
+    print(confetti.path)
+```
+### Output
+```
+/Development/Your/Path
 ```
 
 ## Retrieve and use your parameters in your application. Note that it is assumed that your SecureString parameters are to be retrieved with decryption. You can override the parameters to SSM.Client.get_parameters_by_path via keyword arguments with the exception of 'Path'.
@@ -53,7 +109,7 @@ $ export CONFETTI_PATH=Your/Path
     confetti = Confetti(confetti_key="Production", confetti_path="MyApp")
     parameters = confetti.get_parameters()
 
-    # Print a specific parameter
+    # Print the value of a specific parameter
     print(parameters.APP_URL)
 
     # Print your parameters
