@@ -36,7 +36,7 @@ $ export CONFETTI_PATH=Your/Path
 ```
 The default value will be the class name if neither is specified.
 
-## The parameter store path will be constructed as `/<confetti_key>/<confetti_path>`
+The parameter store path will be constructed as `/<confetti_key>/<confetti_path>`
 
 ## Retrieve and use your parameters in your application.
 ```python
@@ -114,4 +114,4 @@ The default value will be the class name if neither is specified.
     config.set("example.json")
 ```
 
-see also: [AWS Systems Manager Parameter Store Documentation](https://docs.aws.amazon.com/systems-manager/latest/userguide/systems-manager-paramstore.html) [Boto3 SSM.Client.put_parameter](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/ssm.html#SSM.Client.put_parameter)
+see also: [AWS Systems Manager Parameter Store](https://docs.aws.amazon.com/systems-manager/latest/userguide/systems-manager-paramstore.html) [SSM.Client.put_parameter](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/ssm.html#SSM.Client.put_parameter)
