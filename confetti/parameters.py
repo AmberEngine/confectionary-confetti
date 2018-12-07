@@ -15,13 +15,6 @@ class Confetti:
     """Base class for Confetti."""
 
     @staticmethod
-    def get_parameters_by_path(client, **kwargs):
-        """Get a dictionary of parameters."""
-        generator = ClientResponseGenerator(client)
-
-        return generator.get("get_parameters_by_path", "Parameters", **kwargs)
-
-    @staticmethod
     def get_session(session=None):
         """Get the default session if none is set."""
         if not session:
@@ -62,16 +55,22 @@ class Confetti:
         """Override __str__ method."""
         return f"{self.path}"
 
-    def get_parameters(self, **kwargs):
-        """Get namespaced parameters."""
+    def get_parameters_by_path(self, **kwargs):
+        """Get a dictionary of parameters."""
         client = self.session.client("ssm")
-        parameters = dict()
+        generator = ClientResponseGenerator(client)
         kwargs["Path"] = self.path
 
         if "WithDecryption" not in kwargs.keys():
             kwargs["WithDecryption"] = True
 
-        for parameter in self.get_parameters_by_path(client, **kwargs):
+        return generator.get("get_parameters_by_path", "Parameters", **kwargs)
+
+    def get_parameters(self, **kwargs):
+        """Get namespaced parameters."""
+        parameters = dict()
+
+        for parameter in self.get_parameters_by_path(**kwargs):
             name = os.path.basename(parameter["Name"])
             value = parameter["Value"]
 
@@ -79,7 +78,22 @@ class Confetti:
 
         return SimpleNamespace(**parameters)
 
-    def set_parameters(self, file_name):
+    def export_parameters(self, file_name, **kwargs):
+        """Export parameters."""
+        parameters = list()
+
+        for parameter in self.get_parameters_by_path(**kwargs):
+            parameters.append({
+                "Name": os.path.basename(parameter["Name"]),
+                "Value": parameter["Value"],
+                "Type": parameter["Type"],
+                "Overwrite": True
+            })
+
+        with open(file_name, "w") as out_file:
+            json.dump(parameters, out_file)
+
+    def import_parameters(self, file_name):
         """Set parameters."""
         client = self.session.client("ssm")
         key = os.path.join("alias", self.confetti_key)
@@ -108,23 +122,3 @@ class Confetti:
                     print(f"{parameter_already_exists}: {parameter}")
                 else:
                     raise e
-
-    def export_parameters(self, file_name, **kwargs):
-        """Export parameters."""
-        client = self.session.client("ssm")
-        parameters = list()
-        kwargs["Path"] = self.path
-
-        if "WithDecryption" not in kwargs.keys():
-            kwargs["WithDecryption"] = True
-
-        for parameter in self.get_parameters_by_path(client, **kwargs):
-            parameters.append({
-                "Name": os.path.basename(parameter["Name"]),
-                "Value": parameter["Value"],
-                "Type": parameter["Type"],
-                "Overwrite": True
-            })
-
-        with open(file_name, "w") as out_file:
-            json.dump(parameters, out_file)

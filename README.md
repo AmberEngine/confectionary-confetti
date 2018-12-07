@@ -142,7 +142,7 @@ $ export CONFETTI_PATH=Your/Path
     # Create your app's config
     confetti = Confetti(confetti_key="Production", confetti_path="MyApp")
 
-    # Export to JSON
+    # Export to JSON from AWS SSM parameter store
     confetti.export_parameters("parameters.json")
 ```
 
@@ -173,8 +173,8 @@ $ export CONFETTI_PATH=Your/Path
     # Create your app's config
     confetti = Confetti(confetti_key="Production", confetti_path="MyApp")
 
-    # Set parameters in the parameter store
-    confetti.set_parameters("parameters.json")
+    # Import parameters from JSON to AWS SSM parameter store
+    confetti.import_parameters("parameters.json")
 ```
 
 see also: [AWS Systems Manager Parameter Store](https://docs.aws.amazon.com/systems-manager/latest/userguide/systems-manager-paramstore.html) and [SSM.Client.put_parameter](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/ssm.html#SSM.Client.put_parameter)
