@@ -89,17 +89,17 @@ The default value will be the class name if neither is specified.
     "Name": "APP_URL",
     "Value": "http://www.mrcoolice.com/app",
     "Type": "String",
-    "Overwrite": True
+    "Overwrite": true
 }, {
     "Name": "APP_KEY",
     "Value": "abcde12345",
     "Type": "SecureString",
-    "Overwrite": True
+    "Overwrite": true
 }, {
     "Name": "THINGS",
     "Value": "thing1, thing2",
     "Type": "StringList",
-    "Overwrite": True
+    "Overwrite": true
 }]
 ```
 
@@ -114,5 +114,4 @@ The default value will be the class name if neither is specified.
     config.set("example.json")
 ```
 
-see also: [AWS Systems Manager Parameter Store Documentation](https://docs.aws.amazon.com/systems-manager/latest/userguide/systems-manager-paramstore.html)
-see also: [Boto3 SSM.Client.put_parameter](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/ssm.html#SSM.Client.put_parameter)
+see also: [AWS Systems Manager Parameter Store Documentation](https://docs.aws.amazon.com/systems-manager/latest/userguide/systems-manager-paramstore.html) [Boto3 SSM.Client.put_parameter](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/ssm.html#SSM.Client.put_parameter)
