@@ -42,7 +42,6 @@ class Confetti:
         """Get the default confetti_path if none is set."""
         if not confetti_path:
             class_name = cls.__name__
-            print(class_name)
             confetti_path = os.getenv("CONFETTI_PATH", class_name)
 
         return confetti_path
@@ -54,7 +53,6 @@ class Confetti:
 
     def __init__(self, session=None, confetti_key=None, confetti_path=None):
         """Override init method."""
-        print(self.__class__.__name__)
         self.session = self.get_session(session)
         self.confetti_key = self.get_confetti_key(confetti_key)
         self.confetti_path = self.get_confetti_path(confetti_path)
