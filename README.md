@@ -28,7 +28,7 @@ $ export CONFETTI_KEY=YourKey
     config = Confetti(confetti_key='YourKey')
 ```
 
-## Choose a path.  Your path will be appended to the namespacing path of your application's parameters, i.e. /<confetti_key>/<confetti_path>/<parameter_name>. If you don't choose a path, the default value is the name of the Confetti class.
+## Choose a path.  Your path will be appended to the namespacing path of your application's parameters, i.e. /<confetti_key>/<confetti_path>. e.g. /YourKey/Your/Path. If you don't choose a path, the default value is the name of the Confetti class.
 
 ### Override the Confetti class and use MyApp as the default.
 ```python
@@ -46,7 +46,7 @@ $ export CONFETTI_PATH=Your/Path
     config = Confetti(confetti_path='Your/Path')
 ```
 
-## Retrieve and use your parameters in your application.
+## Retrieve and use your parameters in your application. Note that it is assumed that your SecureString parameters are to be retrieved with decryption. You can override the parameters to SSM.Client.get_parameters_by_path via keyword arguments with the exception of 'Path'.
 ```python
     from confetti import Confetti
 
@@ -79,7 +79,7 @@ $ export CONFETTI_PATH=Your/Path
 }]
 ```
 
-## Export your current parameters to a JSON file so you can modify them.
+## Export your current parameters to a JSON file so you can modify them.  Note that it is assumed that your SecureString parameters are to be retrieved with decryption. You can override the parameters to SSM.Client.get_parameters_by_path via keyword arguments with the exception of 'Path'.
 ```python
     from confetti import Confetti
 
