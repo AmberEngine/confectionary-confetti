@@ -8,35 +8,43 @@ Confectionary confetti to confine those confounded configurations confidently
 $ pip install git+ssh://git@github.com/AmberEngine/confectionary-confetti.git#egg=confectionary-confetti
 ```
 
-## A boto3 session will be created from your AWS config and credentials or role or you can override the session.
+## Create a boto3 session. If you don't create a session, one will be created for you using your AWS user configuration or role.
+
+### The session keyword argument overrides the default session.
 ```python
     session = boto3.session.Session()
     config = Confetti(session=session)
 ```
 
-## Choose a key. Your key will be part of the namespacing of your application's parameters and will be used as an alias for a KMS key to encrypt and decrypt your parameters.
+## Choose a key. Your key will the root of the namespacing path of your application's parameters and will be used as an alias for a KMS key to encrypt and decrypt your parameters. If you don't choose a key, the default value is 'Development'.
+
+### Set CONFETTI_KEY environment variable.
 ```bash
 $ export CONFETTI_KEY=YourKey
 ```
 
-### Optionally you can override this in the constructor's keyword arguments.
+### The confetti_key keyword argument overrides the CONFETTI_KEY environment variable.
 ```python
     config = Confetti(confetti_key='YourKey')
 ```
-The default value is 'Development' if neither is specified.
 
-## Choose a path for the namespacing of your application's parameters.
+## Choose a path.  Your path will be appended to the namespacing path of your application's parameters, i.e. /<confetti_key>/<confetti_path>/<parameter_name>. If you don't choose a path, the default value is the name of the Confetti class.
+
+### Override the Confetti class and use MyApp as the default.
+```python
+    class MyApp(Confetti):
+        pass
+```
+
+### Set CONFETTI_PATH environment variable. The CONFETTI_PATH environment overrides the default.
 ```bash
 $ export CONFETTI_PATH=Your/Path
 ```
 
-### Optionally you can override this in the constructor's keyword arguments.
+### The confetti_path keyword argument overrides the CONFETTI_PATH environment variable.
 ```python
     config = Confetti(confetti_path='Your/Path')
 ```
-The default value will be the class name if neither is specified.
-
-The parameter store path will be constructed as `/<confetti_key>/<confetti_path>`
 
 ## Retrieve and use your parameters in your application.
 ```python
@@ -114,4 +122,4 @@ The parameter store path will be constructed as `/<confetti_key>/<confetti_path>
     config.set("example.json")
 ```
 
-see also: [AWS Systems Manager Parameter Store](https://docs.aws.amazon.com/systems-manager/latest/userguide/systems-manager-paramstore.html) [SSM.Client.put_parameter](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/ssm.html#SSM.Client.put_parameter)
+see also: [AWS Systems Manager Parameter Store](https://docs.aws.amazon.com/systems-manager/latest/userguide/systems-manager-paramstore.html) and [SSM.Client.put_parameter](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/ssm.html#SSM.Client.put_parameter)
