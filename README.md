@@ -45,8 +45,25 @@ The default value will be the class name if neither is specified.
     config = Confetti(session=session)
 ```
 
+## Retrieve and use your parameters in your application.
+```python
+    from confetti import Confetti
+
+    confetti = Confetti(confetti_key="Production", confetti_path="MyApp")
+    config = confetti.get()
+
+    # Print a specific parameter
+    print(config.APP_URL)
+
+    # Print your parameters
+    print(config)
+```
+
 ## As an alternative to using the AWS Systems Manager console, you can store parameters by importing from a JSON file.
 see also: [AWS Systems Manager Parameter Store](https://console.aws.amazon.com/systems-manager/parameters)
+see also: [Boto3 SSM.Client.put_parameter](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/ssm.html#SSM.Client.put_parameter)
+
+### Create a JSON file with your new parameters
 ```json
 [{
     "Name": "APP_URL",
@@ -65,32 +82,8 @@ see also: [AWS Systems Manager Parameter Store](https://console.aws.amazon.com/s
     "Type": "StringList"
 }]
 ```
-### Set your parameters for your application.  Do this only once and your parameters will be stored in your AWS SSM Parameter Store.
-```python
-    from confetti import Confetti
 
-    # Create your app's config
-    confetti = Confetti(confetti_key="Production", confetti_path="MyApp")
-
-    # Set parameters in the parameter store
-    config.set("example.json")
-```
-
-### Use your parameters in your application.  Do this to retrieve your parameters from your AWS SSM Parameter Store.
-```python
-    from confetti import Confetti
-
-    confetti = Confetti(confetti_key="Production", confetti_path="MyApp")
-    config = confetti.get()
-
-    # Print a specific parameter
-    print(config.APP_URL)
-
-    # Print your parameters
-    print(config)
-```
-
-### Export parameters to a JSON file so you can modify your parameters. Use the Confetti.set(json) function as above when you're done.
+### Or export your current parameters to a JSON file so you can modify them.
 ```python
     from confetti import Confetti
 
@@ -101,9 +94,35 @@ see also: [AWS Systems Manager Parameter Store](https://console.aws.amazon.com/s
     # Export to JSON
     config.export_parameters("example.json")
 ```
+```json
+[{
+    "Name": "APP_URL",
+    "Description": "The URL",
+    "Value": "http://www.mrcoolice.com/app",
+    "Type": "String",
+    "Overwrite": True
+}, {
+    "Name": "APP_KEY",
+    "Description": "All my passwords and PINs in one parameter",
+    "Value": "abcde12345",
+    "Type": "SecureString",
+    "Overwrite": True
+}, {
+    "Name": "THINGS",
+    "Description": "All the things",
+    "Value": "thing1, thing2",
+    "Type": "StringList",
+    "Overwrite": True
+}]
+```
 
-### Your Friendly Neighborhood Repository Owner
+### Set your parameters for your application.  Do this only once and your parameters will be stored in your AWS SSM Parameter Store.
+```python
+    from confetti import Confetti
 
-[![Jim Garner](https://avatars2.githubusercontent.com/u/9437566?v=3&s=100)](https://github.com/jg75)
+    # Create your app's config
+    confetti = Confetti(confetti_key="Production", confetti_path="MyApp")
 
-[Jim Garner](https:/github.com/jg75)
+    # Set parameters in the parameter store
+    config.set("example.json")
+```
