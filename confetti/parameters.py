@@ -22,50 +22,57 @@ class Confetti:
 
         return generator.get(*args, **kwargs)
 
-    def __init__(
-        self,
-        session=None,
-        confetti_key=None,
-        confetti_path=None,
-        **kwargs
-    ):
+    @staticmethod
+    def get_session(session=None):
+        """Get the default session if none is set."""
+        if not session:
+            session = boto3.session.Session()
+
+        return session
+
+    @staticmethod
+    def get_confetti_key(confetti_key=None):
+        """Get the default confetti_key if none is set."""
+        if not confetti_key:
+            confetti_key = os.getenv("CONFETTI_KEY", "Development")
+
+        return confetti_key
+
+    @classmethod
+    def get_confetti_path(cls, confetti_path=None):
+        """Get the default confetti_path if none is set."""
+        if not confetti_path:
+            class_name = cls.__class__.__name__
+            confetti_path = os.getenv("CONFETTI_PATH", class_name)
+
+        return confetti_path
+
+    @staticmethod
+    def get_path(confetti_key, confetti_path):
+        """Get the constructed path for AWS SSM parameter store."""
+        return os.path.join("/", confetti_key, confetti_path)
+
+    def __init__(self, session=None, confetti_key=None, confetti_path=None):
         """Override init method."""
-        if session:
-            self.session = session
-        else:
-            self.session = boto3.session.Session()
-
-        if confetti_key:
-            self.confetti_key = confetti_key
-        else:
-            self.confetti_key = os.getenv("CONFETTI_KEY", "Development")
-
-        if confetti_path:
-            self.confetti_path = confetti_path
-        else:
-            confetti_path = self.__class__.__name__
-            self.confetti_path = os.getenv("CONFETTI_PATH", confetti_path)
-
-        self.kwargs = kwargs
-        self.kwargs["Path"] = os.path.join(
-            "/",
-            self.confetti_key,
-            self.confetti_path
-        )
-
-        if "WithDecryption" not in self.kwargs.keys():
-            self.kwargs["WithDecryption"] = True
+        self.session = self.get_session(session)
+        self.confetti_key = self.get_confetti_key(confetti_key)
+        self.confetti_path = self.get_confetti_path(confetti_path)
+        self.path = self.get_path(self.confetti_key, self.confetti_path)
 
     def __str__(self):
         """Override __str__ method."""
-        return f"{self.kwargs}"
+        return f"{self.path}"
 
-    def get(self):
+    def get(self, **kwargs):
         """Get namespaced parameters."""
         client = self.session.client("ssm")
         parameters = dict()
+        kwargs["Path"] = self.path
 
-        for parameter in self.get_parameters(client, **self.kwargs):
+        if "WithDecryption" not in kwargs.keys():
+            kwargs["WithDecryption"] = True
+
+        for parameter in self.get_parameters(client, **kwargs):
             name = os.path.basename(parameter["Name"])
             value = parameter["Value"]
 
@@ -103,12 +110,16 @@ class Confetti:
                 else:
                     raise e
 
-    def export_parameters(self, file_name):
+    def export_parameters(self, file_name, **kwargs):
         """Export parameters."""
         client = self.session.client("ssm")
         parameters = list()
+        kwargs["Path"] = self.path
 
-        for parameter in self.get_parameters(client, **self.kwargs):
+        if "WithDecryption" not in kwargs.keys():
+            kwargs["WithDecryption"] = True
+
+        for parameter in self.get_parameters(client, **kwargs):
             parameters.append({
                 "Name": os.path.basename(parameter["Name"]),
                 "Value": parameter["Value"],
