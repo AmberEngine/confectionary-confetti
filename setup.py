@@ -21,7 +21,7 @@ setup_requires = ["pytest-runner>=2.0"]
 
 setup(
     name="confectionary-confetti",
-    version="1",
+    version="0.0.2",
     liscense="MIT",
     url="https://github.com/AmberEngine/confectionary-confetti",
     description=__doc__,

@@ -56,8 +56,8 @@ class Confetti:
         return(
             f"{self.__class__.__name__}("
             f"session={self.session}, "
-            f"confetti_key={'self.confetti_key'}, "
-            f"confetti_path={'self.confetti_path'})"
+            f"confetti_key='{self.confetti_key}', "
+            f"confetti_path='{self.confetti_path}')"
         )
 
     def __str__(self):
@@ -102,7 +102,7 @@ class Confetti:
         with open(file_name, "w") as out_file:
             json.dump(parameters, out_file)
 
-    def import_parameters(self, file_name):
+    def import_parameters(self, file_name, **kwargs):
         """Set parameters."""
         client = self.session.client("ssm")
         key = os.path.join("alias", self.confetti_key)
@@ -123,7 +123,7 @@ class Confetti:
                 parameter["KeyId"] = key
 
             try:
-                client.put_parameter(**parameter)
+                client.put_parameter(**parameter, **kwargs)
             except botocore.exceptions.ClientError as e:
                 parameter_already_exists = "ParameterAlreadyExists"
 
