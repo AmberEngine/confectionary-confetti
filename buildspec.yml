@@ -22,4 +22,4 @@ phases:
 
   post_build:
     commands:
-      - scripts/deploy.sh
+      - scripts/post_build.sh
