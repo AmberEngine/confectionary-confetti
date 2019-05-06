@@ -22,4 +22,4 @@ phases:
 
   post_build:
     commands:
-      - [ $CODEBUILD_INITIATOR == "codepipeline/Confetti" ] && twine upload --username $PYPI_USERNAME --password "$PYPI_PASSWORD" --repository-url https://upload.pypi.org/legacy/ dist/* || true
+      - scripts/deploy.sh
