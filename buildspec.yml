@@ -1,0 +1,25 @@
+version: 0.2
+
+env:
+  parameter-store:
+    PYPI_TESTING_USERNAME: /PyPi/Testing/Username
+    PYPI_TESTING_PASSWORD: /PyPi/Testing/Password
+    PYPI_USERNAME: /PyPi/Production/Username
+    PYPI_PASSWORD: /PyPi/Production/Password
+
+phases:
+  install:
+    commands:
+      - pip install tox
+
+  pre_build:
+    commands:
+      - tox
+
+  build:
+    commands:
+      - python setup.py sdist
+
+  post_build:
+    commands:
+      - [ $CODEBUILD_INITIATOR == "codepipeline/Confetti" ] && twine upload --username $PYPI_USERNAME --password "$PYPI_PASSWORD" --repository-url https://upload.pypi.org/legacy/ dist/* || true

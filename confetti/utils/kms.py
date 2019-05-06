@@ -8,7 +8,7 @@ def key_exists(client, key_id):
     try:
         client.describe_key(KeyId=key_id)
     except botocore.exceptions.ClientError as e:
-        if e.response['Error']['Code'] == 'NotFoundException':
+        if e.response["Error"]["Code"] == "NotFoundException":
             return False
         else:
             raise e

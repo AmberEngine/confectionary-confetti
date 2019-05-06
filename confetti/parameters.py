@@ -53,7 +53,7 @@ class Confetti:
 
     def __repr__(self):
         """Override repr method."""
-        return(
+        return (
             f"{self.__class__.__name__}("
             f"session={self.session}, "
             f"confetti_key='{self.confetti_key}', "
@@ -92,12 +92,14 @@ class Confetti:
         parameters = list()
 
         for parameter in self.get_parameters_by_path(**kwargs):
-            parameters.append({
-                "Name": os.path.basename(parameter["Name"]),
-                "Value": parameter["Value"],
-                "Type": parameter["Type"],
-                "Overwrite": True
-            })
+            parameters.append(
+                {
+                    "Name": os.path.basename(parameter["Name"]),
+                    "Value": parameter["Value"],
+                    "Type": parameter["Type"],
+                    "Overwrite": True,
+                }
+            )
 
         with open(file_name, "w") as out_file:
             json.dump(parameters, out_file)
